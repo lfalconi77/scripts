@@ -1,4 +1,8 @@
 #!/usr/bin/bash
+#This scrips finds new disks (disks without partitions nor labels), puts them under LVM control, creates an xfs filesystem in them
+#creates one directory under /mnt for each disk, adds an entry to the /etc/fstab for each disk and mounts the disk.
+#Also, writes a data/time stamped file with the new added raw disks devices /dev/sdxx to keep track of when disks were added.
+
 rm -f devices
 rm -f newdevice
 ls /dev | grep sd | sed -e "s/vg_[^ ]*//ig" | sed '/^[[:space:]]*$/d' > devices
@@ -20,7 +24,7 @@ for device in `cat devices`; do
 done
 mount -a
 cat newdevice
-echo "devices added successfully to GFS"
-mv newdevice GFSExpansions$(date "+%m.%d.%y-%H.%M.%S").txt
+echo "devices added successfully"
+mv newdevice DiskExpansions$(date "+%m.%d.%y-%H.%M.%S").txt
 rm -f newdevice
 rm -f devices
